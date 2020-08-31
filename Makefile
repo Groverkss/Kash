@@ -13,7 +13,7 @@ LIBS=-lm
 _DEPS = util.h libs.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = shell.o color.o prompt.o
+_OBJ = shell.o color.o prompt.o error.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
