@@ -28,4 +28,12 @@ int fatal_error_check(int out_check, int error_out);
 // else returns 0
 int warning_error_check(int out_check, int error_out);
 
+// Parsing
+
+void parse(char *read_buffer);
+
+// Dynamic Allocation
+// Returns Pathname with dynammic allocation of path
+char *get_path(void);
+
 #endif

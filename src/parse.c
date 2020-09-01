@@ -10,15 +10,20 @@ void parse(char *read_buffer) {
 
         if(args) {
             if (!strcmp(args, "cd")) {
-                // TODO: CD
+                change_dir(&save_args);
+
             } else if (!strcmp(args, "pwd")) {
-                // TODO: PWD
+                present_dir();
+
             } else if (!strcmp(args, "echo")) {
-                // TODO: ECHO
+                echo(&save_args);
+
             } else if (!strcmp(args, "ls")) {
                 // TODO: LS
+                
             } else {
                 // TODO: EXEC COMMANDS
+                
             }
 
             // Use this to move foward in the args

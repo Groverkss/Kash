@@ -10,11 +10,11 @@ LDIR =lib
 
 LIBS=-lm
 
-_DEPS = util.h libs.h parse.h
+_DEPS = util.h libs.h builtin.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = shell.o color.o prompt.o error.o \
-	   parse.o
+_OBJ = shell.o prompt.o parse.o utils.o \
+	   builtin.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)

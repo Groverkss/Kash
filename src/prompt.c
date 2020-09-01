@@ -2,15 +2,16 @@
 
 // Implement dynamic allocation
 static const int HOST_SIZE = 128;
-static const int PATH_SIZE = 128;
 
-static char *HOME = NULL;
+char *HOME = NULL;
 
 static int check_prefix(char *path) {
 // Check Prefix of string with HOME. If HOME is a prefix,
 // replaces the character before start with ~ and
 // returns index from where ~ start.
 // On fail, returns 0.
+
+// TODO: Special case check for root
 
     int home_len = strlen(HOME);
     int path_len = strlen(path);
@@ -29,19 +30,32 @@ static int check_prefix(char *path) {
 }
 
 void display_prompt(void) {
-// Implement dynamic reallocation
+// TODO: Implement dynamic reallocation
+// TODO: Implement memory checks
+
     char *host_buffer = malloc(HOST_SIZE);
+    if (host_buffer == NULL) {
+        // Throw fatal error
+        fatal_error_check(0, 0);
+    }
 
     gethostname(host_buffer, HOST_SIZE);
     char *user_name = getlogin();
+    if (user_name == NULL) {
+        // Throw fatal error
+        fatal_error_check(0, 0);
+    }
 
     cprintf(BLUE, "<%s@%s:", user_name, host_buffer);
 
-    char *curr_path = malloc(PATH_SIZE);
-    getcwd(curr_path, PATH_SIZE);
+    char *curr_path = get_path();
 
     if (HOME == NULL) {
         HOME = strdup(curr_path);
+        if (HOME == NULL) {
+            // Throw fatal error
+            fatal_error_check(0, 0);
+        }
     }
 
     cprintf(GREEN, "%s> ", curr_path + check_prefix(curr_path));
