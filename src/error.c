@@ -1,4 +1,3 @@
-#include "util.h"
 #include "libs.h"
 
 int fatal_error_check(int out_check, int error_out) {

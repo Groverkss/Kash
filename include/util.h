@@ -28,9 +28,4 @@ int fatal_error_check(int out_check, int error_out);
 // else returns 0
 int warning_error_check(int out_check, int error_out);
 
-// Parsing
-
-// Returns a parsed 
-char **parse(char *buffer);
-
 #endif

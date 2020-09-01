@@ -1,4 +1,3 @@
-#include "util.h"
 #include "libs.h"
 
 // Implement dynamic allocation

@@ -8,5 +8,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <errno.h>
+#include "util.h"
+#include "parse.h"
 
 #endif

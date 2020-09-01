@@ -1,4 +1,3 @@
-#include "util.h"
 #include "libs.h"
 
 void cprintf(const char* color, const char *format, ...) {
