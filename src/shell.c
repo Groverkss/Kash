@@ -6,9 +6,13 @@ int main(int argc, char *argv[]) {
     ssize_t nread = 0;
     size_t buffer_len = 0;
 
-    while(nread != -1) {
+    while(true) {
         display_prompt();
         nread = getline(&read_buffer, &buffer_len, stdin);
+
+        if (nread == -1) {
+            break;
+        }
         
         parse(read_buffer);
     }
