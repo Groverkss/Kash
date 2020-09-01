@@ -8,7 +8,7 @@ static char *replace_tilda(char *path_name) {
 
     char *actual_path = NULL;
 
-    if (path_name[0] == '~') {
+    if (path_name[0] == '~' && (strlen(path_name) == 1 || path_name[1] == '/')) {
         actual_path = malloc(strlen(HOME) + strlen(path_name)); 
 
         if (strlen(path_name) == 1) {
@@ -121,5 +121,21 @@ void list_ls(CVector *args) {
 
     if (flag_none) {
         print_contents(".", flag_l, flag_a);
+    }
+}
+
+void execute_command(CVector *args) {
+    for (int i = 0; i < args->used; i++) {
+        args->vector[i] = replace_tilda(args->vector[i]);
+    }
+    pbCVector(args, NULL);
+
+    // Make this better written
+    int fok = fork();
+    if (!fok) {
+        execvp(args->vector[0], args->vector);
+        exit(0);
+    } else {
+        wait(NULL);
     }
 }

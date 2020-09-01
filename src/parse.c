@@ -29,7 +29,7 @@ void parse(char *read_buffer) {
                 list_ls(argv);
 
             } else {
-                // TODO: EXEC COMMANDS
+                execute_command(argv);
             }
         }
 

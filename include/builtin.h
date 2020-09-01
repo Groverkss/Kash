@@ -18,4 +18,7 @@ void echo(CVector *args);
 // List
 void list_ls(CVector *args);
 
+// Execute
+void execute_command(CVector *args);
+
 #endif
