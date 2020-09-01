@@ -2,7 +2,6 @@
 
 int main(int argc, char *argv[]) {
 
-    // TODO: Buffer Size Check + Reallocation
     char *read_buffer = NULL;
     ssize_t nread = 0;
     size_t buffer_len = 0;

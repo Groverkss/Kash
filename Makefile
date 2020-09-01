@@ -10,15 +10,15 @@ LDIR =lib
 
 LIBS=-lm
 
-_DEPS = util.h libs.h builtin.h
+_DEPS = util.h libs.h builtin.h char_vector.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = shell.o prompt.o parse.o utils.o \
-	   builtin.o
+	   builtin.o char_vector.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -g -o $@ $< $(CFLAGS)
 
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)

@@ -5,30 +5,36 @@ void parse(char *read_buffer) {
 
     // Parse to indvidual commands
     char *token_args = strtok_r(read_buffer, ";\n", &save_token_args);
+
     while(token_args) {
-        char *args = strtok_r(token_args, " \t", &save_args);
+        char *token_dup = strdup(token_args);
+        if (token_dup == NULL) {
+            // Throw fatal error
+            fatal_error_check(0, 0);
+        }
 
-        if(args) {
-            if (!strcmp(args, "cd")) {
-                change_dir(&save_args);
+        CVector *argv = to_args(token_dup);
 
-            } else if (!strcmp(args, "pwd")) {
+        if(argv->used != 0) {
+            if (!strcmp(argv->vector[0], "cd")) {
+                change_dir(argv);
+
+            } else if (!strcmp(argv->vector[0], "pwd")) {
                 present_dir();
 
-            } else if (!strcmp(args, "echo")) {
-                echo(&save_args);
+            } else if (!strcmp(argv->vector[0], "echo")) {
+                echo(argv);
 
-            } else if (!strcmp(args, "ls")) {
-                // TODO: LS
-                
+            } else if (!strcmp(argv->vector[0], "ls")) {
+                list_ls(argv);
+
             } else {
                 // TODO: EXEC COMMANDS
-                
             }
-
-            // Use this to move foward in the args
-            // args = strtok_r(NULL, " \t", &save_args);
         }
+
+        freeCVector(argv);
+        free(token_dup);
 
         token_args = strtok_r(NULL, ";\n", &save_token_args);
     }    

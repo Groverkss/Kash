@@ -10,9 +10,12 @@ extern char *HOME;
 void present_dir(void);
 
 // Change Directory
-void change_dir(char **save_args);
+void change_dir(CVector *args);
 
 // Echo
-void echo(char **save_args);
+void echo(CVector *args);
+
+// List
+void list_ls(CVector *args);
 
 #endif
