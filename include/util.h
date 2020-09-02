@@ -43,4 +43,15 @@ char *get_path(void);
  */
 char *replace_tilda(char *path_name);
 
+/**
+ * @brief: Given a pid, returns a list of arguements based on /proc/[pid]/stat
+ * @params: pid_t pid: pid of process
+ * @return: pointer to CVector containing stat arguements
+ *
+ * Refer to 'man proc' under /proc/[pid]/stat part
+ * for info on the arguments. The arguements are 0-indexed.
+ * The last arguement is the file path
+ */
+CVector *get_stat_args(pid_t pid);
+
 #endif

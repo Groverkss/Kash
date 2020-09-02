@@ -59,8 +59,10 @@ void display_prompt(void) {
     // If launched from home, every path is from tilda
     if (!strcmp(HOME, "/")) {
         cprintf(GREEN, "~%s> ", curr_path);
+        fflush(stdout);
     } else {
         cprintf(GREEN, "%s> ", curr_path + check_prefix(curr_path));
+        fflush(stdout);
     }
 
     // Dont free user_name, it is staticly allocated

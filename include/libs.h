@@ -21,5 +21,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <time.h>
+#include "signal_handlers.h"
 
 #endif

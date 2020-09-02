@@ -42,13 +42,40 @@ void execute_command(CVector *args) {
         pbCVector(args, NULL);
     }
 
-    // TODO: Add support for background process
     pid_t child_pid = fork();
 
     if (!child_pid) {
-        execvp(args->vector[0], args->vector);
-        exit(0);
+        // Child process
+        
+        if (flag_bg) {
+            // If bg process, change process group id
+            setpgid(0, 0);
+        }
+
+        fatal_error_check(execvp(args->vector[0], args->vector), -1);
     } else {
-        wait(NULL);
+        if (!flag_bg) {
+            wait(NULL);
+        }
     }
+}
+
+void process_info(CVector *args) {
+    pid_t pid_to_use;
+
+    if (args->used == 1) {
+        pid_to_use = getpid();
+    } else if (args->used == 2) {
+        pid_to_use = atoi(args->vector[1]);
+    } 
+
+    CVector *stat_args = get_stat_args(pid_to_use);
+    if (!stat_args) {
+        return;
+    }
+
+    printf("pid -- %s\n", stat_args->vector[0]);
+    printf("Process Status -- %s\n", stat_args->vector[2]);
+    printf("memory -- %s\n", stat_args->vector[22]);
+    printf("Executable Path -- %s\n", stat_args->vector[stat_args->used - 1]);
 }

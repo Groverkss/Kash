@@ -31,4 +31,10 @@ void echo(CVector *args);
  */
 void execute_command(CVector *args);
 
+/**
+ * @brief: Prints the process related info of shell program
+ * @params: CVector *args: Vector list of arguments
+ */
+void process_info(CVector *args);
+
 #endif
