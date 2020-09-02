@@ -16,5 +16,7 @@ int main(int argc, char *argv[]) {
         
         parse(read_buffer);
     }
+
+    free(read_buffer);
 }
 

@@ -1,24 +1,34 @@
 #ifndef _BUILTIN_
 #define _BUILTIN_
 
-// In parse.c, required for ~
+/**
+ * @brief: Home directory path
+ */
 extern char *HOME;
 
-// Builtin functions require the save_args for them to work
-
-// Present Working Directory
+/**
+ * @brief: Prints present working directory
+ * @params: None
+ */
 void present_dir(void);
 
-// Change Directory
+/*
+ * @brief: Changes directory
+ * @params: CVector *args: Vector list of arguements
+ */
 void change_dir(CVector *args);
 
-// Echo
+/**
+ * @brief: Prints given arguements
+ * @params: CVector *args: Vector list of arguements
+ */
 void echo(CVector *args);
 
-// List
-void list_ls(CVector *args);
-
-// Execute
+/**
+ * @brief: Executes a file specified in PATH variable
+ *         or a path specified
+ * @params: CVector *args: Vector list of arguements
+ */
 void execute_command(CVector *args);
 
 #endif

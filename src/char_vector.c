@@ -33,7 +33,6 @@ void freeCVector(CVector *cvector) {
     }
 
     free(cvector->vector);
-    cvector->vector = NULL;
     cvector->used = cvector->size = 0;
 }
 

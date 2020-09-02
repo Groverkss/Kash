@@ -13,8 +13,10 @@ void parse(char *read_buffer) {
             fatal_error_check(0, 0);
         }
 
+        // Convert string to list of args
         CVector *argv = to_args(token_dup);
 
+        // Execute list of args
         if(argv->used != 0) {
             if (!strcmp(argv->vector[0], "cd")) {
                 change_dir(argv);
@@ -36,6 +38,7 @@ void parse(char *read_buffer) {
         freeCVector(argv);
         free(token_dup);
 
+        // Next list of args
         token_args = strtok_r(NULL, ";\n", &save_token_args);
     }    
 }
