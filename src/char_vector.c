@@ -4,9 +4,12 @@ void initCVector(CVector *cvector) {
     size_t initSize = 1;
 
     cvector->vector = malloc(initSize * sizeof(char *));
+
     if (cvector->vector == NULL) {
+        // Throw fatal error
         fatal_error_check(0, 0);
     }
+
     cvector->used = 0;
     cvector->size = initSize;
 }
@@ -14,10 +17,11 @@ void initCVector(CVector *cvector) {
 void pbCVector(CVector *cvector, char *element) {
     if (cvector->used == cvector->size) {
         cvector->size *= 2;
+
         cvector->vector = realloc(cvector->vector, 
                 cvector->size * sizeof(char *));
 
-        if (cvector->vector == NULL) {
+        if (cvector->vector == NULL) { 
             // Throw fatal error
             fatal_error_check(0, 0);
         }

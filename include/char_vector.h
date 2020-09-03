@@ -35,6 +35,6 @@ void freeCVector(CVector *cvector);
  * @params: char *str: string to convert
  * @return: Pointer to a CVector
  */
-CVector* to_args(char *str);
+CVector *to_args(char *str);
 
 #endif

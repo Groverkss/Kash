@@ -71,6 +71,7 @@ void process_info(CVector *args) {
 
     CVector *stat_args = get_stat_args(pid_to_use);
     if (!stat_args) {
+        fprintf(stderr, "Cannot obtain information for pid %d\n", pid_to_use);
         return;
     }
 

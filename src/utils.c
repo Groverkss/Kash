@@ -63,8 +63,6 @@ CVector *get_stat_args(pid_t pid) {
 
     FILE *file = fopen(proc_path, "r");
     if (file == NULL) {
-        // TODO: Check if it is a malloc error or open error
-        fprintf(stderr, "Process with pid %d does not exist\n", pid);
         return NULL;
     }
 
@@ -73,7 +71,7 @@ CVector *get_stat_args(pid_t pid) {
     size_t buffer_size = 0;
 
     ssize_t nread = getline(&buffer, &buffer_size, file);
-    if (warning_error_check(nread, -1)) {
+    if (nread == -1) {
         return NULL;    
     }
 
@@ -84,9 +82,11 @@ CVector *get_stat_args(pid_t pid) {
     // TODO: Implement dynamic reallocation
     char *exe = malloc(256);
     nread = readlink(exe_path, exe, 256); 
+
+    // Dont do anything if you cant read. NULL is returned for Zombie process
     if (nread == -1) {
-        fprintf(stderr, "Cannot find process executable path\n");
-        return NULL;
+        free(exe);
+        exe = NULL;
     }
 
     CVector *ret = to_args(buffer);

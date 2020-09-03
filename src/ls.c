@@ -159,10 +159,21 @@ void list_ls(CVector *args) {
         }
     }
 
+    for (int i = 1; i < args->used; i++) {
+        if (args->vector[i][0] == '-') {
+            free(args->vector[i]);
+            args->vector[i] = NULL;
+        }
+    }
+
     // Flag to check if any directories are passed
     int flag_none = 1;
 
-    for (int i = optind; i < args->used; i++) {
+    for (int i = 1; i < args->used; i++) {
+        if (args->vector[i] == NULL) {
+            continue;
+        }
+
         flag_none = 0;
         print_contents(replace_tilda(args->vector[i]), flag_l, flag_a);
     }

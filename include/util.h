@@ -48,7 +48,7 @@ char *replace_tilda(char *path_name);
  * @params: pid_t pid: pid of process
  * @return: pointer to CVector containing stat arguements
  *
- * Refer to 'man proc' under /proc/[pid]/stat part
+ * Refer to 'man proc' under /proc/[pid]/stat part (line 1171)
  * for info on the arguments. The arguements are 0-indexed.
  * The last arguement is the file path
  */

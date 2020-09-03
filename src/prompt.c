@@ -30,6 +30,8 @@ static int check_prefix(char *path) {
 
 void display_prompt(void) {
     // TODO: Implement dynamic reallocation
+    // TODO: Create a new signal safe function which does
+    //       use malloc
 
     char *host_buffer = malloc(HOST_SIZE);
     if (host_buffer == NULL) {
@@ -38,8 +40,9 @@ void display_prompt(void) {
     }
 
     fatal_error_check(gethostname(host_buffer, HOST_SIZE), -1);
+
     char *user_name = getlogin();
-    if (user_name == NULL) {
+    if (!user_name) {
         // Throw fatal error
         fatal_error_check(0, 0);
     }
@@ -58,7 +61,11 @@ void display_prompt(void) {
 
     // If launched from home, every path is from tilda
     if (!strcmp(HOME, "/")) {
-        cprintf(GREEN, "~%s> ", curr_path);
+        if (!strcmp(HOME, curr_path)) {
+            cprintf(GREEN, "~> ");
+        } else {
+            cprintf(GREEN, "~%s> ", curr_path);
+        }
         fflush(stdout);
     } else {
         cprintf(GREEN, "%s> ", curr_path + check_prefix(curr_path));

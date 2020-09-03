@@ -19,12 +19,21 @@ static void child_exit_handler(int sig, siginfo_t* info, void* vp) {
     int wstatus;
     pid_t child_pid;
 
+    CVector *file_args = get_stat_args(info->si_pid);
+
+    if (file_args != NULL) {
+        file_args->vector[1][strlen(file_args->vector[1]) - 1] = '\0';
+    }
+    
     if ((child_pid = waitpid(-1, &wstatus, WNOHANG | WUNTRACED)) > 0) { 
+
         if (WIFEXITED(wstatus)) {
-            printf("\nProcess with pid %d exited normally\n", child_pid);
+            printf("\n%s with pid %d exited normally\n", 
+                    file_args->vector[1] + 1, child_pid);
             display_prompt();
         } else {
-            printf("\nProcess with pid %d did not exit normally\n", child_pid);
+            printf("\n%s with pid %d exited normally\n",
+                    file_args->vector[1] + 1, child_pid);
             display_prompt();
         }
     }
