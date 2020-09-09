@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <pwd.h>
 #include <grp.h>
+#include <ncurses.h>
 #include "char_vector.h"
 #include "util.h"
 #include "builtin.h"
@@ -22,5 +23,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include "signal_handlers.h"
+#include "nightswatch.h"
+#include "history.h"
 
 #endif

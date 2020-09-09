@@ -24,12 +24,17 @@ void parse(char *read_buffer) {
             } else if (!strcmp(argv->vector[0], "pwd")) {
                 present_dir();
             } else if (!strcmp(argv->vector[0], "echo")) {
-                echo(argv);
+                builtin_echo(argv);
             } else if (!strcmp(argv->vector[0], "ls")) {
                 list_ls(argv);
             } else if (!strcmp(argv->vector[0], "pinfo")){
                 process_info(argv);
-            } else {
+            } else if (!strcmp(argv->vector[0], "nightswatch")) {
+                nightswatch(argv);
+            } else if (!strcmp(argv->vector[0], "history")) {
+                print_history(argv);
+            }
+            else {
                 execute_command(argv);
             }
         }

@@ -1,7 +1,8 @@
 #include "libs.h"
 
+static size_t initSize = 1;
+
 void initCVector(CVector *cvector) {
-    size_t initSize = 1;
 
     cvector->vector = malloc(initSize * sizeof(char *));
 

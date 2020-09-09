@@ -12,7 +12,7 @@ extern char *HOME;
  */
 void present_dir(void);
 
-/*
+/**
  * @brief: Changes directory
  * @params: CVector *args: Vector list of arguements
  */
@@ -22,7 +22,7 @@ void change_dir(CVector *args);
  * @brief: Prints given arguements
  * @params: CVector *args: Vector list of arguements
  */
-void echo(CVector *args);
+void builtin_echo(CVector *args);
 
 /**
  * @brief: Executes a file specified in PATH variable

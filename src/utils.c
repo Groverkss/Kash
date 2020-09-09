@@ -66,7 +66,6 @@ CVector *get_stat_args(pid_t pid) {
         return NULL;
     }
 
-
     char *buffer = NULL;
     size_t buffer_size = 0;
 

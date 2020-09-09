@@ -1,6 +1,9 @@
 # Vscode
 .vscode
 
+# History
+.kash_history
+
 # Prerequisites
 *.d
 

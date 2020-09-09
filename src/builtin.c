@@ -14,7 +14,7 @@ void change_dir(CVector *args) {
     free(path_name);
 }
 
-void echo(CVector *args) {
+void builtin_echo(CVector *args) {
     for (int i = 1; i < args->used; i++) {
         printf("%s ", args->vector[i]);
     }

@@ -57,6 +57,9 @@ void display_prompt(void) {
             // Throw fatal error
             fatal_error_check(0, 0);
         }
+
+        /* Initialize history file */
+        init_history();
     }
 
     // If launched from home, every path is from tilda

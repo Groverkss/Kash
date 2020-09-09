@@ -10,6 +10,8 @@ int main(int argc, char *argv[]) {
         display_prompt();
         nread = getline(&read_buffer, &buffer_len, stdin);
 
+        add_to_history(read_buffer);
+
         if (nread == -1) {
             break;
         }
