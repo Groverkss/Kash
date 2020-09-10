@@ -1,5 +1,7 @@
 #include "libs.h"
 
+static const int DEFAULT_ELSIZE = 256;
+
 void present_dir(void) {
     printf("%s\n", get_path());
 }
@@ -52,10 +54,30 @@ void execute_command(CVector *args) {
             setpgid(0, 0);
         }
 
+
         fatal_error_check(execvp(args->vector[0], args->vector), -1);
     } else {
+
         if (!flag_bg) {
             wait(NULL);
+        } else {
+            /* Format pid + name according to 
+             * [pid][null][name]
+             */
+            char *element = malloc(DEFAULT_ELSIZE);
+
+            // Do memory check
+
+            sprintf(element, "%d$%s", child_pid, args->vector[0]);
+            for (int i = 0; i < strlen(element); i++) {
+                if (element[i] == '$') {
+                    element[i] = '\0';
+                    break;
+                }
+            }
+
+            /* Add pid to pidlist */
+            add_to_CVector(pid_list, element);
         }
     }
 }

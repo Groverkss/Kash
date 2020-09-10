@@ -20,6 +20,11 @@ void init_history(void) {
         fclose(history_stream);
     } else {
         fclose(history_stream);
+
+        /* Fix required for opening file again */
+        history_stream = fopen(HISTORY_FILE, "a");
+        fprintf(history_stream, "\n");
+        fclose(history_stream);
     }
 }
 

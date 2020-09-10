@@ -6,6 +6,8 @@ int main(int argc, char *argv[]) {
     size_t buffer_len = 0;
 
     install_zombie_handler();
+
+
     while(true) {
         display_prompt();
         nread = getline(&read_buffer, &buffer_len, stdin);
