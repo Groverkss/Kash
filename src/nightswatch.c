@@ -3,7 +3,7 @@
 static const char *INTERRUPT_FILE = "/proc/interrupts";
 static const char *NEWBORN_FILE = "/proc/loadavg";
 
-static void interrupt_check(void) {
+static void interrupt_check(bool first) {
     FILE *interrupt_stream = fopen(INTERRUPT_FILE, "r");
 
     char *line1 = NULL, *line2 = NULL, *line3 = NULL;
@@ -16,10 +16,13 @@ static void interrupt_check(void) {
     CVector *args1 = to_args(line1);
     CVector *args2 = to_args(line3);
 
-    for (int i = 0; i < args1->used - 1; i++) {
-        printw("      %s", args1->vector[i]);
+    if (first) {
+        for (int i = 0; i < args1->used - 1; i++) {
+            printw("      %s", args1->vector[i]);
+        }
+        printw("\n");
     }
-    printw("\n");
+
     for (int i = 1; i < args1->used; i++) {
         int check = atoi(args2->vector[i]);
         printw("%10d", check);
@@ -56,7 +59,7 @@ void nightswatch(CVector *args) {
     while((opt_ret = getopt(args->used, args->vector, "n:")) != -1) {
         if (opt_ret == 'n') {
             if (optarg != NULL) {
-               n_sec = atoi(optarg); 
+                n_sec = atoi(optarg); 
             }
         } else {
             fprintf(stderr, "Usage: nightswatch [option] <command>\n");
@@ -84,12 +87,14 @@ void nightswatch(CVector *args) {
     }
 
     /* Open ncurses window */
-    initscr();
-    clear();
+    WINDOW *win = initscr();
+    scrollok(win, true);
     raw();
+    clear();
 
     int timer = n_sec;
 
+    bool first = true;
     while(true) {
         timeout(0);
         int key = getch();
@@ -99,7 +104,8 @@ void nightswatch(CVector *args) {
 
         if (timer == n_sec) {
             if (command_type == 0) {
-                interrupt_check();
+                interrupt_check(first);
+                first = false;
             } else {
                 newborn_check();
             }
