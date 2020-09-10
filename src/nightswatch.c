@@ -82,7 +82,7 @@ void nightswatch(CVector *args) {
     }
 
     if (command_type == -1) {
-        fprintf(stderr, "Usage: nightswatch [options] <command>");
+        fprintf(stderr, "Usage: nightswatch [options] <command>\n");
         return;
     }
 

@@ -1,6 +1,6 @@
 #include "libs.h"
 
-static const int PATH_SIZE = 256;
+static const int PATH_SIZE = 512;
 
 void cprintf(const char *color, const char *format, ...) {
     printf("%s", color);
