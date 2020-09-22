@@ -7,34 +7,10 @@
 extern char *HOME;
 
 /**
- * @brief: Prints present working directory
- * @params: None
- */
-void present_dir(void);
-
-/**
- * @brief: Changes directory
- * @params: CVector *args: Vector list of arguements
- */
-void change_dir(CVector *args);
-
-/**
- * @brief: Prints given arguements
- * @params: CVector *args: Vector list of arguements
- */
-void builtin_echo(CVector *args);
-
-/**
  * @brief: Executes a file specified in PATH variable
  *         or a path specified
  * @params: CVector *args: Vector list of arguements
  */
 void execute_command(CVector *args);
-
-/**
- * @brief: Prints the process related info of shell program
- * @params: CVector *args: Vector list of arguments
- */
-void process_info(CVector *args);
 
 #endif

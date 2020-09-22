@@ -6,6 +6,6 @@
  *         performs a specified task
  * @params: CVector *args: Vector list of arguements 
  */
-void nightswatch(CVector *args);
+int nightswatch(CVector *args);
 
 #endif

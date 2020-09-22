@@ -47,7 +47,7 @@ static void newborn_check(void) {
     fclose(newborn_stream);
 }
 
-void nightswatch(CVector *args) { 
+int nightswatch(CVector *args) { 
     int n_sec = -1;
 
     /*Mention under NOTES section of man 3 optget*/
@@ -63,7 +63,7 @@ void nightswatch(CVector *args) {
             }
         } else {
             fprintf(stderr, "Usage: nightswatch [option] <command>\n");
-            return;
+            return 1;
         }
     }
 
@@ -83,7 +83,7 @@ void nightswatch(CVector *args) {
 
     if (command_type == -1) {
         fprintf(stderr, "Usage: nightswatch [options] <command>\n");
-        return;
+        return 1;
     }
 
     /* Open ncurses window */
@@ -117,4 +117,6 @@ void nightswatch(CVector *args) {
 
     /* Close ncurses window */
     endwin();
+
+    return 0;
 }

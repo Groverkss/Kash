@@ -5,6 +5,6 @@
  * @brief: Lists contents in given directory.
  * @params: CVector *args: Vector list of arguemnts
  */
-void list_ls(CVector *args);
+int list_ls(CVector *args);
 
 #endif

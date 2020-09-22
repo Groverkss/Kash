@@ -68,7 +68,7 @@ static void reduce_history(void) {
     freeCVector(file_lines);
 }
 
-void print_history(CVector *args) {
+int print_history(CVector *args) {
     optind = 0;
 
     /* Get number of lines to print */
@@ -97,6 +97,7 @@ void print_history(CVector *args) {
     }
 
     free(history_lines);
+    return 0;
 }
 
 

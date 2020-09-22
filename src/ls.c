@@ -84,12 +84,12 @@ static void extra_info_ls(struct stat *statbuf) {
  * @params: flag_l: denotes the -l flag
  *          flag_a: denotes the -a flag
  */
-static void print_contents(char *path_name, int flag_l, int flag_a) {
+static int print_contents(char *path_name, int flag_l, int flag_a) {
     DIR *dir = opendir(path_name);
     if (dir == NULL) {
         // Throw warning error
         warning_error_check(0, 0);
-        return;
+        return 1;
     }
 
     // Do not free curr_file, may be staticaly allocated
@@ -137,9 +137,11 @@ static void print_contents(char *path_name, int flag_l, int flag_a) {
     if (!flag_l) {
         printf("\n");
     }
+
+    return 0;
 }
 
-void list_ls(CVector *args) {
+int list_ls(CVector *args) {
     optind = 0;  // Mentioned under NOTES section of man 3 optget
     int flag_l = 0, flag_a = 0;
     int opt_ret;
@@ -155,7 +157,7 @@ void list_ls(CVector *args) {
                 break;
             default:
                 fprintf(stderr, "Usage: ls [al]... [FILE]\n");
-                return;
+                return 1;
         }
     }
 
@@ -169,17 +171,22 @@ void list_ls(CVector *args) {
     // Flag to check if any directories are passed
     int flag_none = 1;
 
+    int status_code = 0;
+
     for (int i = 1; i < args->used; i++) {
         if (args->vector[i] == NULL) {
             continue;
         }
 
         flag_none = 0;
-        print_contents(replace_tilda(args->vector[i]), flag_l, flag_a);
+        status_code |= 
+            print_contents(replace_tilda(args->vector[i]), flag_l, flag_a);
     }
 
     // If no args specified, print contents of current file
     if (flag_none) {
-        print_contents(".", flag_l, flag_a);
+        status_code |= print_contents(".", flag_l, flag_a);
     }
+
+    return status_code;
 }
