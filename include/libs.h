@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <time.h>
+#include "proclist.h"
 #include "signal_handlers.h"
 #include "nightswatch.h"
 #include "history.h"

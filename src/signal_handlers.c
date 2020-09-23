@@ -27,27 +27,23 @@ static void child_exit_handler(int sig, siginfo_t* info, void* vp) {
     while ((child_pid = waitpid(-1, &wstatus,
                     WNOHANG | WUNTRACED | WCONTINUED)) > 0) {
         found = true;
-        char *name_pid = NULL;
+        char *name_pid = get_name(child_pid);
 
         if (WIFEXITED(wstatus)) {
-            name_pid = remove_from_CVector(pid_list, child_pid, true);
             fprintf(stderr, "\n%s with pid %d exited normally\n",
                     name_pid, child_pid);
+            remove_pid(child_pid);
         } else if (WIFSTOPPED(wstatus)) {
-            name_pid = remove_from_CVector(pid_list, child_pid, false);
             fprintf(stderr, "\n%s with pid %d suspended normally\n",
                     name_pid, child_pid);
         } else if (WIFCONTINUED(wstatus)) {
-            name_pid = remove_from_CVector(pid_list, child_pid, false);
             fprintf(stderr, "\n%s with pid %d continued normally\n",
                     name_pid, child_pid);
         } else {
-            name_pid = remove_from_CVector(pid_list, child_pid, true);
             fprintf(stderr, "\n%s with pid %d did not exit normally\n",
                     name_pid, child_pid);
+            remove_pid(child_pid);
         }
-
-        free(name_pid);
     }
 
     if (found) {
@@ -56,8 +52,5 @@ static void child_exit_handler(int sig, siginfo_t* info, void* vp) {
 }
 
 void install_zombie_handler(void) {
-    /* Initialize pidlist */
-    pid_list = malloc(sizeof(CVector *));
-    initCVector(pid_list);
     install_signal(SIGCHLD, child_exit_handler);
 }

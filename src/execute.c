@@ -110,8 +110,6 @@ int execute_command(CVector *args, bool use_pipe) {
     pid_t child_pid = fork();
 
     if (!child_pid) {
-        // Child process
-
         /* Close unused end of pipe */
         close(pipefd[0]);
 
@@ -138,23 +136,8 @@ int execute_command(CVector *args, bool use_pipe) {
         if (!flag_bg) {
             wait(NULL);
         } else {
-            /* Format pid + name according to 
-             * [pid][null][name]
-             */
-            char *element = malloc(DEFAULT_ELSIZE);
-
-            // Do memory check
-
-            sprintf(element, "%d$%s", child_pid, args->vector[0]);
-            for (int i = 0; i < strlen(element); i++) {
-                if (element[i] == '$') {
-                    element[i] = '\0';
-                    break;
-                }
-            }
-
-            /* Add pid to pidlist */
-            add_to_CVector(pid_list, element);
+            /* Add process to process list */
+            add_pid(child_pid, args->vector[0]);
         }
 
         /* Open other pipe end as stdin */
