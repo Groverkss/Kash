@@ -13,7 +13,6 @@
 #include <ncurses.h>
 #include "char_vector.h"
 #include "util.h"
-#include "builtin.h"
 #include "ls.h"
 #include <stdbool.h>
 #include <dirent.h>
@@ -25,5 +24,7 @@
 #include "signal_handlers.h"
 #include "nightswatch.h"
 #include "history.h"
+#include "builtin.h"
+#include "execute.h"
 
 #endif

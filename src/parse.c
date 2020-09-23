@@ -1,5 +1,15 @@
 #include "libs.h"
 
+static void reset_streams(int STDIN_FD, int STDOUT_FD) {
+    /* Return stdin and stdout and close duplicated */
+    int stdin_check = dup2(STDIN_FD, STDIN_FILENO);
+    int stdout_check = dup2(STDOUT_FD, STDOUT_FILENO);
+    fatal_error_check(stdin_check, -1);
+    fatal_error_check(stdout_check, -1);
+    close(STDIN_FD);
+    close(STDOUT_FD);
+}
+
 static int parse_args(CVector *args) {
     CVector *curr = malloc(sizeof(CVector));
     if (curr == NULL) {
@@ -15,14 +25,18 @@ static int parse_args(CVector *args) {
         return 3;
     }
 
+    bool use_pipe = true;
     for (int i = 0; i < args->used; i++) {
         if (!strcmp(args->vector[i], "<")) {
             if (i + 1 == args->used) {
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 2;
             }
 
             int readfile_fd = open(args->vector[i + 1], O_RDONLY);
             if (readfile_fd < 0) {
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 3;
             }
 
@@ -32,18 +46,23 @@ static int parse_args(CVector *args) {
             /* Close current stdin and replace with readfile_fd */
             int stdinfd = dup2(readfile_fd, STDIN_FILENO);
             if (stdinfd < 0) {
-                /* TODO: Reset stdin */
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 3;
             }
 
         } else if (!strcmp(args->vector[i], ">")) {
             if (i + 1 == args->used) {
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 2;
             }
 
+            use_pipe = false;
             int writefile_fd = open(args->vector[i + 1],
-                    O_WRONLY | O_CREAT, 00644);
+                    O_WRONLY | O_CREAT | O_TRUNC, 00644);
             if (writefile_fd < 0) {
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 3;
             }
 
@@ -54,12 +73,40 @@ static int parse_args(CVector *args) {
             int stdoutfd = dup2(writefile_fd, STDOUT_FILENO);
 
             if (stdoutfd < 0) {
-                /* TODO: Reset stdout */
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
+                return 3;
+            }
+
+        } else if (!strcmp(args->vector[i], ">>")) {
+            if (i + 1 == args->used) {
+                reset_streams(STDIN_FD, STDOUT_FD);
+                return 2;
+            }
+
+            use_pipe = false;
+            int writefile_fd = open(args->vector[i + 1],
+                    O_WRONLY | O_CREAT | O_APPEND, 00644);
+            if (writefile_fd < 0) {
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
+                return 3;
+            }
+
+            /* Move to the next arguement after read the file name */
+            i++;
+
+            /* Close current stdin and replace with readfile_fd */
+            int stdoutfd = dup2(writefile_fd, STDOUT_FILENO);
+
+            if (stdoutfd < 0) {
+                perror("Kash");
+                reset_streams(STDIN_FD, STDOUT_FD);
                 return 3;
             }
 
         } else if (!strcmp(args->vector[i], "|")) {
-            execute_command(curr);
+            execute_command(curr, use_pipe);
 
             /* Reinitialize current args */
             freeCVector(curr);
@@ -69,35 +116,16 @@ static int parse_args(CVector *args) {
             /* Open output stream as stdout */
             int stdout_check = dup2(STDOUT_FD, STDOUT_FILENO);
             fatal_error_check(stdout_check, -1);
+            use_pipe = true;
         } else {
             pbCVector(curr, args->vector[i]); 
         }
     }
 
-    execute_command(curr);
+    /* Don't use pipe for final */
+    execute_command(curr, false);
 
-    /* Print the output from the final pipe */
-    int BUFFER_SZ = 512;
-    char *read_buffer[512];
-    ssize_t nread;
-
-    while(true) {
-        nread = read(STDIN_FILENO, &read_buffer, BUFFER_SZ);
-        if (nread < 1) {
-            break;
-        } 
-
-        write(STDOUT_FILENO, &read_buffer, nread);
-    }
-
-    /* Return stdin and stdout and close duplicated */
-    int stdin_check = dup2(STDIN_FD, STDIN_FILENO);
-    int stdout_check = dup2(STDOUT_FD, STDOUT_FILENO);
-    fatal_error_check(stdin_check, -1);
-    fatal_error_check(stdout_check, -1);
-    close(STDIN_FD);
-    close(STDOUT_FD);
-
+    reset_streams(STDIN_FD, STDOUT_FD);
     return 0;
 }
 
