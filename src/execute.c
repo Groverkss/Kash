@@ -2,7 +2,7 @@
 
 static const int DEFAULT_ELSIZE = 256;
 
-static char *builtin_commands[] = {"cd"};
+static char *builtin_commands[] = {"cd", "setenv", "unsetenv"};
 
 static int present_dir(void) {
     printf("%s\n", get_path());
