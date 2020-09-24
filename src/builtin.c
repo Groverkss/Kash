@@ -46,10 +46,11 @@ static int builtin_jobs(CVector *args) {
         /* Get status of process */
         CVector *child_stats = get_stat_args(curr->pid);
         char proc_state = child_stats->vector[2][0];
-        if (proc_state == 'R') {
-            status = "Running";
-        } else {
+
+        if (proc_state == 'T') {
             status = "Stopped";
+        } else {
+            status = "Running";
         }
 
         printf("[%d] %s %s [%d]\n", index++, status, curr->name, curr->pid);
