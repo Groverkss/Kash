@@ -1,13 +1,38 @@
 #include "libs.h"
 
+char *OLD_DIR = NULL;
+
 static int change_dir(CVector *args) {
     char *path_name = NULL;
 
     int status_code;
+
+    /* Save current path */
+    char *save_dir = get_path();
+
     if (args->used > 1) {
-        path_name = replace_tilda(args->vector[1]);
-        status_code = warning_error_check(chdir(path_name), -1);
+        if (!strcmp(args->vector[1], "-")) {
+            if (OLD_DIR == NULL) {
+                OLD_DIR = strdup(HOME);
+            }
+
+            /* Change dir and print */
+            printf("%s\n", OLD_DIR);
+            status_code = warning_error_check(chdir(OLD_DIR), -1);
+
+        } else {
+            path_name = replace_tilda(args->vector[1]);
+            status_code = warning_error_check(chdir(path_name), -1);
+        }
+    } else {
+        /* Default Behavior to go to HOME */
+        status_code = warning_error_check(chdir(HOME), -1);
     }
+
+    /* Update old directory */
+    free(OLD_DIR);
+    OLD_DIR = save_dir;
+
     free(path_name);
     return status_code;
 }

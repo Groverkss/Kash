@@ -32,7 +32,6 @@ int warning_error_check(int out_check, int error_out) {
 }
 
 char *get_path(void) {
-    // TODO: Implement dynammic reallocation
     char *curr_path = malloc(PATH_SIZE);
     getcwd(curr_path, PATH_SIZE);
     return curr_path;
