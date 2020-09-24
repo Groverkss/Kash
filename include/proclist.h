@@ -15,4 +15,6 @@ void remove_pid(pid_t pid);
 
 char *get_name(pid_t pid);
 
+process *get_by_index(int index);
+
 #endif

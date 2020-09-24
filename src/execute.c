@@ -2,7 +2,8 @@
 
 static const int DEFAULT_ELSIZE = 256;
 
-static char *builtin_commands[] = {"cd", "setenv", "unsetenv"};
+static char *builtin_commands[] = {"cd", "setenv", "unsetenv", "jobs", "kjob",
+                                    "fg", "bg", "overkill", "quit"};
 
 static int present_dir(void) {
     printf("%s\n", get_path());
@@ -110,6 +111,11 @@ int execute_command(CVector *args, bool use_pipe) {
     pid_t child_pid = fork();
 
     if (!child_pid) {
+
+        /* Restore Default Signal Handlers */
+        signal(SIGINT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+
         /* Close unused end of pipe */
         close(pipefd[0]);
 
@@ -120,10 +126,10 @@ int execute_command(CVector *args, bool use_pipe) {
         }
 
         close(pipefd[1]);
+        setpgid(0, 0);
 
         if (flag_bg) {
             // If bg process, change process group id
-            setpgid(0, 0);
         }
 
         execute_args(args);
@@ -133,11 +139,24 @@ int execute_command(CVector *args, bool use_pipe) {
         /* Close unused end of pipe */
         close(pipefd[1]);
 
+        /* Add process to process list */
+        add_pid(child_pid, args->vector[0]);
+
         if (!flag_bg) {
-            wait(NULL);
-        } else {
-            /* Add process to process list */
-            add_pid(child_pid, args->vector[0]);
+            int wstatus;
+
+            signal(SIGTTOU, SIG_IGN), signal(SIGTTOU, SIG_IGN);
+            tcsetpgrp(STDIN_FILENO, child_pid);
+
+            waitpid(child_pid, &wstatus, WUNTRACED);
+
+            tcsetpgrp(STDIN_FILENO, getpgrp());
+            signal(SIGTTOU, SIG_DFL), signal(SIGTTOU, SIG_DFL);
+
+            if (!WIFSTOPPED(wstatus)) {
+                remove_pid(child_pid);
+            }
+
         }
 
         /* Open other pipe end as stdin */

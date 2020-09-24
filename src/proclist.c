@@ -56,3 +56,11 @@ char *get_name(pid_t pid) {
     }
     return NULL;
 }
+
+process *get_by_index(int index) {
+    process *curr = process_list;
+    while(index--) {
+        curr = curr->next;
+    }
+    return curr;
+}

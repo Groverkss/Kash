@@ -7,6 +7,10 @@ int main(int argc, char *argv[]) {
 
     install_zombie_handler();
 
+    /* Ignore Ctrl+C and Ctrl+Z */
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
+
     while(true) {
         display_prompt();
         nread = getline(&read_buffer, &buffer_len, stdin);
