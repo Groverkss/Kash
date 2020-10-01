@@ -28,11 +28,7 @@ static int check_prefix(char *path) {
     return home_len - 1;
 }
 
-void display_prompt(void) {
-    // TODO: Implement dynamic reallocation
-    // TODO: Create a new signal safe function which does
-    //       use malloc
-
+void display_prompt(bool status) {
     char *host_buffer = malloc(HOST_SIZE);
     if (host_buffer == NULL) {
         // Throw fatal error
@@ -45,6 +41,15 @@ void display_prompt(void) {
     if (!user_name) {
         // Throw fatal error
         fatal_error_check(0, 0);
+    }
+
+    /* Status: 0 No Problemo
+     * Status: 1 Some Problemo
+     * */
+    if (!status) {
+        cprintf(GREEN, ":')"); 
+    } else {
+        cprintf(RED, ":'("); 
     }
 
     cprintf(BLUE, "<%s@%s:", user_name, host_buffer);

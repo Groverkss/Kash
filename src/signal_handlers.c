@@ -24,10 +24,15 @@ static void child_exit_handler(int sig, siginfo_t* info, void* vp) {
 
     bool found = false;
 
+    int exit_status = 0;
     while ((child_pid = waitpid(-1, &wstatus,
                     WNOHANG | WUNTRACED | WCONTINUED)) > 0) {
         found = true;
         char *name_pid = get_name(child_pid);
+
+        /* Status: 0 No Problemo
+         * Status: 1 Some Problemo
+         * */
 
         if (WIFEXITED(wstatus)) {
             fprintf(stderr, "\n%s with pid %d exited normally\n",
@@ -43,11 +48,14 @@ static void child_exit_handler(int sig, siginfo_t* info, void* vp) {
             fprintf(stderr, "\n%s with pid %d did not exit normally\n",
                     name_pid, child_pid);
             remove_pid(child_pid);
+
+            /* Indicate problem */
+            exit_status = 1;
         }
     }
 
     if (found) {
-        display_prompt();
+        display_prompt(exit_status);
     }
 }
 

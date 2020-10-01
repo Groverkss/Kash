@@ -3,7 +3,7 @@
 
 // Prompt functions
 
-void display_prompt(void);
+void display_prompt(bool status);
 
 // Color macros
 
@@ -30,7 +30,7 @@ int warning_error_check(int out_check, int error_out);
 
 // Parsing
 
-void parse(char *read_buffer);
+int parse(char *read_buffer);
 
 // Dynamic Allocation
 // Returns Pathname with dynammic allocation of path

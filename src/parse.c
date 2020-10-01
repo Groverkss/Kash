@@ -26,6 +26,8 @@ static int parse_args(CVector *args) {
     }
 
     bool use_pipe = true;
+
+    int status_code = 0;
     for (int i = 0; i < args->used; i++) {
         if (!strcmp(args->vector[i], "<")) {
             if (i + 1 == args->used) {
@@ -106,7 +108,7 @@ static int parse_args(CVector *args) {
             }
 
         } else if (!strcmp(args->vector[i], "|")) {
-            execute_command(curr, use_pipe);
+            status_code |= execute_command(curr, use_pipe);
 
             /* Reinitialize current args */
             freeCVector(curr);
@@ -123,18 +125,19 @@ static int parse_args(CVector *args) {
     }
 
     /* Don't use pipe for final */
-    execute_command(curr, false);
+    status_code |= execute_command(curr, false);
 
     reset_streams(STDIN_FD, STDOUT_FD);
-    return 0;
+    return status_code;
 }
 
-void parse(char *read_buffer) {
+int parse(char *read_buffer) {
     char *save_token_args, *save_args;
 
     // Parse to indvidual commands
     char *token_args = strtok_r(read_buffer, ";\n", &save_token_args);
 
+    int final_status = 0;
     while(token_args) {
         char *token_dup = strdup(token_args);
         if (token_dup == NULL) {
@@ -146,8 +149,14 @@ void parse(char *read_buffer) {
         CVector *argv = to_args(token_dup);
 
         int status = parse_args(argv);
+        /* status: 0 --> No Problemo */
+        /* status: 1 --> Command Error */
         /* status: 2 --> Parse Error */
         /* status: 3 --> File Discriptor Allocation Error */
+
+        if (status) {
+            final_status = 1;
+        }
 
         freeCVector(argv);
         free(token_dup);
@@ -155,4 +164,6 @@ void parse(char *read_buffer) {
         // Next list of args
         token_args = strtok_r(NULL, ";\n", &save_token_args);
     }    
+
+    return final_status;
 }

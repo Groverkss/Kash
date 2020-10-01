@@ -66,7 +66,8 @@ static void execute_args(CVector *args) {
             pbCVector(args, NULL);
 
             /* Exit directly if fault */
-            fatal_error_check(execvp(args->vector[0], args->vector), -1);
+            status_code =
+                warning_error_check(execvp(args->vector[0], args->vector), -1);
         }
     }
 
@@ -74,6 +75,7 @@ static void execute_args(CVector *args) {
         /* Wait requires exit code 3 for success */ 
         exit(3); 
     } else {
+        /* Let 1 indicate error */
         exit(1);
     }
 }
@@ -155,13 +157,20 @@ int execute_command(CVector *args, bool use_pipe) {
 
             if (!WIFSTOPPED(wstatus)) {
                 remove_pid(child_pid);
+            } else {
+                status_code = 1; 
             }
 
+            if (WEXITSTATUS(wstatus) == 1 || WTERMSIG(wstatus)) {
+                status_code = 1;
+            }
         }
 
         /* Open other pipe end as stdin */
         int stdin_check = dup2(pipefd[0], STDIN_FILENO);
         fatal_error_check(stdin_check, -1);
         close(pipefd[0]);
+
+        return status_code;
     }
 }

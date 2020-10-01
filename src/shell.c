@@ -11,17 +11,23 @@ int main(int argc, char *argv[]) {
     signal(SIGINT, SIG_IGN);
     signal(SIGTSTP, SIG_IGN);
 
-    while(true) {
-        display_prompt();
-        nread = getline(&read_buffer, &buffer_len, stdin);
+    /* Status: 0 No Problemo
+     * Status: 1 Some Problemo
+     * */
+    int current_status = 0;
 
-        add_to_history(read_buffer);
+    while(true) {
+        display_prompt(current_status);
+        nread = getline(&read_buffer, &buffer_len, stdin);
 
         if (nread == -1) {
             break;
         }
+
+        add_to_history(read_buffer);
+
         
-        parse(read_buffer);
+        current_status = parse(read_buffer);
     }
 
     free(read_buffer);

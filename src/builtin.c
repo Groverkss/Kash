@@ -129,6 +129,8 @@ static int builtin_bg(CVector *args) {
 }
 
 static int builtin_fg(CVector *args) {
+    int status_code = 0;
+
     if (args->used != 2) {
         fprintf(stderr, "Usage: fg <job number>\n");
         return 1;
@@ -160,9 +162,15 @@ static int builtin_fg(CVector *args) {
 
     if (!WIFSTOPPED(wstatus)) {
         remove_pid(child_pid);
+    } else {
+        status_code = 1; 
     }
 
-    return 0;
+    if (WEXITSTATUS(wstatus) == 1 || WTERMSIG(wstatus)) {
+        status_code = 1;
+    }
+
+    return status_code;
 }
 
 int execute_builtin(CVector *args, bool use_pipe) {
@@ -205,11 +213,12 @@ int execute_builtin(CVector *args, bool use_pipe) {
        while(environ[envi] != NULL) {
        printf("%s\n", environ[envi++]);
        }
-
-*/
+       */
 
     /* Open other pipe end as stdin */
     int stdin_check = dup2(pipefd[0], STDIN_FILENO);
     fatal_error_check(stdin_check, -1);
     close(pipefd[0]);
+
+    return status_code;
 }
