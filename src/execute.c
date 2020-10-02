@@ -22,7 +22,7 @@ static int process_info(CVector *args) {
     pid_t pid_to_use;
 
     if (args->used == 1) {
-        pid_to_use = getpid();
+        pid_to_use = getppid();
     } else if (args->used == 2) {
         pid_to_use = atoi(args->vector[1]);
     } 
