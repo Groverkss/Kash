@@ -37,7 +37,7 @@ void display_prompt(bool status) {
 
     fatal_error_check(gethostname(host_buffer, HOST_SIZE), -1);
 
-    char *user_name = getlogin();
+    char *user_name = getpwuid(getuid())->pw_name;
     if (!user_name) {
         // Throw fatal error
         fatal_error_check(0, 0);
